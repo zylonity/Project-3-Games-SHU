@@ -308,7 +308,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 271692908}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.2457, y: -2.2943, z: 0}
+  m_LocalPosition: {x: -6.2457, y: -1.7, z: 0}
   m_LocalScale: {x: 2.5881, y: 2.5881, z: 2.5881}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorCheck: {fileID: 414835991}
   moveSpeed: 5
-  maxMovementSpeed: 0
+  maxMovementSpeed: 6.4
   jumpHeight: 5
 --- !u!50 &271692913
 Rigidbody2D:
@@ -533,13 +533,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1171036184}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cee6b374d9217f4e9506571a38a8cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rat_prefab: {fileID: 7568920706430394899, guid: fd378986bb45e9b44a4d574a691af0a7, type: 3}
-  player_transform: {fileID: 271692911}
+  ratPrefab: {fileID: 7568920706430394899, guid: fd378986bb45e9b44a4d574a691af0a7, type: 3}
+  playerTransform: {fileID: 271692911}
+  probability: 1
+  spawnProbTime: 3
+  maxDistance: 5
 --- !u!1 &1676651895
 GameObject:
   m_ObjectHideFlags: 0

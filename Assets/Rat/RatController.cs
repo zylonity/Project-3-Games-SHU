@@ -7,12 +7,11 @@ public class RatController : MonoBehaviour
     [SerializeField] Sprite Idle;
     [SerializeField] Sprite Walk;
     [SerializeField] Sprite Dead;
-    [SerializeField] Transform player_transform;
+    public Transform playerTransform;
     Animation Idle_an;
     Animation Walk_an;
     Animation Dead_an;
     private ushort health = 2;
-    bool dead_a_stopped = false;
     private enum RatStates { alive, chase, dying };
     private RatStates state = RatStates.alive;
     // Start is called before the first frame update

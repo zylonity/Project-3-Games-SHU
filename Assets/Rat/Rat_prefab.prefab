@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7568920706430394899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.39216, y: -3.3191798, z: 0}
+  m_LocalPosition: {x: 0.4623028, y: -2.9677916, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43,15 +43,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7568920706430394899}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4883e5567516a848b1bfac59dc0d2ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Idle: {fileID: 1150653220, guid: 1a5b926ec701c6e49972ac08ba3a8a9a, type: 3}
-  Walk: {fileID: 0}
+  Walk: {fileID: 774340420, guid: 65f5de9106769074caf98c658c8cf506, type: 3}
   Dead: {fileID: -1945721987, guid: db512ac1054e76b4e8947dde393af062, type: 3}
-  player_transform: {fileID: 0}
+  playerTransform: {fileID: 0}
 --- !u!212 &1812330982009813646
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -144,7 +144,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &-5597975114420349032
 BoxCollider2D:
   m_ObjectHideFlags: 0
