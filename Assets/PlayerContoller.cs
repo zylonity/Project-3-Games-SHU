@@ -58,9 +58,9 @@ public class PlayerContoller : MonoBehaviour
                 }
 
                 if (xAxis > 0.1)
-                    transform.localScale.Set(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-                else if (xAxis < 0.1)
-                    transform.localScale.Set(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                    spriteRenderer.flipX = false;
+                else if (xAxis < -0.1)
+                    spriteRenderer.flipX = true;
 
             }
 
@@ -68,11 +68,11 @@ public class PlayerContoller : MonoBehaviour
             
             //check if the player is touching the floor using a raycast
             RaycastHit2D hit = Physics2D.Raycast(floorCheck.transform.position, Vector2.down, 0.05f);
-            Debug.DrawRay(floorCheck.transform.position, Vector2.down*0.05f, Color.green);
+            Debug.DrawRay(floorCheck.transform.position, Vector2.down * 0.05f, Color.green);
             if (hit.collider != null)
             {
                 print("touching");
-                if (jumpAxis > 0.1)
+                if (jumpAxis > 0.1) 
                 {
                     pRigidBody.AddForce(new Vector2(0, jumpAxis * jumpHeight));
                 }

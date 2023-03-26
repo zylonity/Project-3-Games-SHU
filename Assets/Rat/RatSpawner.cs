@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
-using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class RatSpawner : MonoBehaviour
 {
@@ -12,16 +12,16 @@ public class RatSpawner : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private float probability;
     [SerializeField] private float spawnProbTime;
-    [SerializeField] private int maxDistance;
+    [SerializeField, Range(0, 5)]  private float minDistance = 5.0f;
+    [SerializeField, Range(5, 12)] private float maxDistance = 10.0f;
 
     private int probability_max = 0;
-    private Transform mouse_transform;
     float spawn_timer = 0;
     // Start is called before the first frame update
     void Start()
     {
         probability_max = (int)(1.0 / probability) + 1;
-        mouse_transform = ratPrefab.transform;
+        ratPrefab.GetComponent<RatController>().playerTransform = playerTransform;
     }
 
     // Update is called once per frame
@@ -37,12 +37,12 @@ public class RatSpawner : MonoBehaviour
     }
     void SpawnRat()
     {
-        float random_distance = Random.Range(0, maxDistance + 1);
+        UnityEngine.Vector3 spawn_pos = new UnityEngine.Vector3(0,0,0);
+        float random_distance = Random.Range(minDistance, maxDistance + 1);
         if (Random.Range(0, 2) == 0)
-            mouse_transform.position = new UnityEngine.Vector3(playerTransform.position.x - random_distance, playerTransform.position.y, 0);
+            spawn_pos = new UnityEngine.Vector3(playerTransform.position.x - random_distance, -4, 0);
         else
-            mouse_transform.position = new UnityEngine.Vector3(playerTransform.position.x + random_distance, playerTransform.position.y, 0);
-        ratPrefab.GetComponent<RatController>().playerTransform = playerTransform;
-        Instantiate(ratPrefab, mouse_transform);
+            spawn_pos = new UnityEngine.Vector3(playerTransform.position.x + random_distance, -4, 0);
+        Instantiate(ratPrefab, spawn_pos, new UnityEngine.Quaternion(0,0,0,0), transform);
     }
 }
