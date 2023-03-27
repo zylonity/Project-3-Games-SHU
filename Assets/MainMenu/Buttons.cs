@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayButton : MonoBehaviour
+public class Buttons : MonoBehaviour
 {
     private GameController gm = null;
     // Start is called before the first frame update
