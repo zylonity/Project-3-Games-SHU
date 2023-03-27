@@ -6,8 +6,10 @@ using UnityEngine.Rendering;
 
 public class CameraController : MonoBehaviour
 {
+    //assigned from outside class variables
+    public GameController gm = null;
     public Transform playerTransform = null;
-    private GameController gm = null;
+
     public static CameraController _camcont = null;
     private Camera _camera = null;
     Vector3 standart_camera_pos;
@@ -15,6 +17,7 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        gm = GameController._gameController;
         _camera = GetComponent<Camera>();
         _camcont = this;
         standart_camera_pos = this.transform.position;
@@ -23,6 +26,8 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         gm = GameController._gameController;
+        // assert if gm is null
+        Debug.Assert(gm != null, "Game controller is null", this);
     }
 
     // Update is called once per frame
@@ -38,7 +43,7 @@ public class CameraController : MonoBehaviour
             }
             else
             {
-                float new_camera_size = (1 + new_transform.y - standart_camera_pos.y) + standart_camera_size;
+                float new_camera_size = standart_camera_size + (new_transform.y - standart_camera_pos.y)/standart_camera_size;
                 _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, new_camera_size, 0.001f);
             }
             new_transform.z = standart_camera_pos.z;
