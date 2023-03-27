@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerContoller : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public enum PlayerSpritesNm {Idle, Torch, Run, Jump};
     Rigidbody2D pRigidBody;
     SpriteRenderer spriteRenderer;
-
+    public static PlayerController _playerController = null;
     public GameObject floorCheck;
-    
 
+    public readonly int maxHealth = 10;
+    public int playerHealth = 0;
     [SerializeField]
     float moveSpeed = 5f;
 
@@ -25,6 +26,10 @@ public class PlayerContoller : MonoBehaviour
     [SerializeField] Sprite[] PlayerSprites = new Sprite[4];
     // gamemode reference
     private GameController gm = null;
+    private void Awake()
+    {
+        _playerController = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +39,8 @@ public class PlayerContoller : MonoBehaviour
         CameraController._camcont.playerTransform = this.transform;
         // assigne gamemode
         gm = GameController._gameController;
+        playerHealth = maxHealth;
+        
     }
     void OnDestroy()
     {
@@ -44,6 +51,13 @@ public class PlayerContoller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // debug
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            --playerHealth;
+            if (playerHealth <= 0)
+                gm.ChangeGameState(GameController.MyGameState.Over);
+        }
         // Update only when Game gamemode is active
         if (gm != null && gm.current_state == GameController.MyGameState.Game)
         {
