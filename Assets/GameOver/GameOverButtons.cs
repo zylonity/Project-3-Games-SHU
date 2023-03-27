@@ -12,7 +12,7 @@ public class GameOverButtons : MonoBehaviour
         gm = GameController._gameController;
         Debug.Assert(gm != null, "Game controller wasn't found", this);
         _canvas = gameObject.GetComponent<Canvas>();
-        Debug.Assert(_canvas != null, "Canvas wasn't found", this);
+        Debug.Assert(_canvas != null, "Canvas isn't assigned", this);
     }
     public void PlayAgainButtonPressed() 
     {

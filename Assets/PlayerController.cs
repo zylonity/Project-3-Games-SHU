@@ -79,9 +79,10 @@ public class PlayerController : MonoBehaviour
             }
 
             float jumpAxis = Input.GetAxis("Jump");
-            
+
+            int layerMask = ~(1 << LayerMask.NameToLayer("Triggers"));
             //check if the player is touching the floor using a raycast
-            RaycastHit2D hit = Physics2D.Raycast(floorCheck.transform.position, Vector2.down, 0.05f);
+            RaycastHit2D hit = Physics2D.Raycast(floorCheck.transform.position, Vector2.down, 0.05f, layerMask);
             Debug.DrawRay(floorCheck.transform.position, Vector2.down * 0.05f, Color.green);
             if (hit.collider != null)
             {

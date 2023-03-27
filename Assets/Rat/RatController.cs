@@ -13,8 +13,10 @@ public class RatController : MonoBehaviour
     private Move rat_move = new Move();
     [SerializeField, Range(0,1)] private float RatCheckTime = 0.1f;
     public float RatCheckTimer = 0.0f;
-    private enum RatStates { wander, move, chase, dying };
-
+    // torchok is affected by torch
+    private enum RatStates { wander, chase, torchok, dying };
+    private bool outOfTorchArea = false;
+    private float lightAffectedTimer = 0.0f;
     private RatStates state = RatStates.wander;
 
     public Transform playerTransform = null;
@@ -36,7 +38,8 @@ public class RatController : MonoBehaviour
     [SerializeField, Range(2, 10)]  private float RatMaxSpeed = 5.0f;
     [SerializeField, Range(1, 10)]  private float PlayerDetectDistance = 5.0f;
     [SerializeField, Range(0, 1)]   private float WanderSlowDown = 0.3f;
-    [SerializeField]                private int tick_rate = 5;
+    [SerializeField]                private int   ticksTillDecide = 5;
+    [SerializeField, Range(0, 3)]   private float lightAffectedTime = 1.0f;
     private float RandomSpeed = 1.0f;
     private ushort health = 2;
     private float despawnOffScreenTimer = 0.0f;
@@ -54,6 +57,24 @@ public class RatController : MonoBehaviour
     }
 
     // Update is called once per frame
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("TorchCircle"))
+        {
+            Debug.Log("Rat Entered torch area");
+            if (state != RatStates.dying)
+                state = RatStates.torchok;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("TorchCircle"))
+        {
+            Debug.Log("Rat Entered torch area");
+            if(state!= RatStates.dying)
+                outOfTorchArea= true;
+        }
+    }
     void Update()
     {
         // mouse events
@@ -69,22 +90,38 @@ public class RatController : MonoBehaviour
 
                 if (math.abs(dist) < PlayerDetectDistance)
                 {
-                    state = RatStates.chase;
-                    if (dist > 0.0f)
+                    if (state != RatStates.torchok)
                     {
-                        rat_move.Right = true;
-                        rat_move.Left = false;
+                        state = RatStates.chase;
+                        if (dist > 0.0f)
+                        {
+                            rat_move.Right = true;
+                            rat_move.Left = false;
+                        }
+                        else
+                        {
+                            rat_move.Right = false;
+                            rat_move.Left = true;
+                        }
                     }
-                    else
+                    else 
                     {
-                        rat_move.Right = false;
-                        rat_move.Left = true;
+                        if (dist > 0.0f)
+                        {
+                            rat_move.Right = false; 
+                            rat_move.Left = true;
+                        }
+                        else
+                        {
+                            rat_move.Right = true;
+                            rat_move.Left = false;
+                        }
                     }
                 }
                 else
                 {
                     state = RatStates.wander;
-                    if (ticks > tick_rate)
+                    if (ticks > ticksTillDecide)
                     {
                         ticks = 0;
                         // if wandering chouse random direction per tick
@@ -98,6 +135,16 @@ public class RatController : MonoBehaviour
                             rat_move.Right = false;
                             rat_move.Left = true;
                         }
+                    }
+                }
+                if (outOfTorchArea)
+                {
+                    lightAffectedTimer += Time.deltaTime;
+                    if (lightAffectedTimer > lightAffectedTime)
+                    {
+                        lightAffectedTimer = 0;
+                        outOfTorchArea= false;
+                        state = RatStates.wander;
                     }
                 }
             }
@@ -118,13 +165,16 @@ public class RatController : MonoBehaviour
             if (!Dead_an.enabled)
                 Destroy(gameObject);
         }
-        float speed = 0.0f;
+        Vector2 speed = new Vector2(0.0f, 0.0f);
         switch (state) {
             case RatStates.wander:
-                speed = RandomSpeed * Time.deltaTime * WanderSlowDown;
+                speed.x = RandomSpeed * WanderSlowDown;
                 break;
             case RatStates.chase:
-                speed = RandomSpeed * Time.deltaTime;
+                speed.x = RandomSpeed;
+                break;
+            case RatStates.torchok:
+                speed.x = RandomSpeed * 2.0f;
                 break;
         }
         if (rat_move.Left || rat_move.Right)
@@ -132,12 +182,12 @@ public class RatController : MonoBehaviour
             if (rat_move.Right)
             {
                 _sprRenderer.flipX = false;
-                transform.Translate(speed, 0, 0);
+                _rb.velocity = new Vector2(speed.x, speed.y);
             }
             else if (rat_move.Left)
             {
                 _sprRenderer.flipX = true;
-                transform.Translate(-speed, 0, 0);
+                _rb.velocity = new Vector2(-speed.x, speed.y);
             }
         }
     }

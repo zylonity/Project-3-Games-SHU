@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -5597975114420349032}
   m_Layer: 8
   m_Name: Rat_prefab
-  m_TagString: Untagged
+  m_TagString: Rat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,12 +54,13 @@ MonoBehaviour:
   Idle: {fileID: 1150653220, guid: 1a5b926ec701c6e49972ac08ba3a8a9a, type: 3}
   Walk: {fileID: 774340420, guid: 65f5de9106769074caf98c658c8cf506, type: 3}
   Dead: {fileID: -1945721987, guid: db512ac1054e76b4e8947dde393af062, type: 3}
-  despawnOffScreenTime: 30
-  RatMinSpeed: 1.5
-  RatMaxSpeed: 4.5
+  despawnOffScreenTime: 0
+  RatMinSpeed: 2
+  RatMaxSpeed: 3
   PlayerDetectDistance: 5
   WanderSlowDown: 0.3
-  tick_rate: 20
+  ticksTillDecide: 5
+  lightAffectedTime: 0.62
 --- !u!212 &1812330982009813646
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -144,7 +145,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.2
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
