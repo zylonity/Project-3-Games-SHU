@@ -73,18 +73,16 @@ public class GameController : MonoBehaviour
             case MyGameState.MainMenu:
                 UpdateScene("Game", true);
                 UpdateScene("MainMenu");
+                Time.timeScale = 1.0f;
                 break;
             case MyGameState.Game:
-                if (current_state != MyGameState.Paused && current_state != MyGameState.Over)
+                if (current_state == MyGameState.MainMenu)
                 {
                     UpdateScene("MainMenu", true);
                     UpdateScene("Game");
                 }
-                else
-                {
-                    Debug.Log("Time Scale set to 1.0");
-                    Time.timeScale = 1.0f;
-                }
+                Debug.Log("Time Scale set to 1.0");
+                Time.timeScale = 1.0f;
                 break;
             case MyGameState.Paused:
                 Debug.Log("Time Scale set to 0.0");

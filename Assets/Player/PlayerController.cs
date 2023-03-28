@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public enum PlayerSpritesNm {Idle, Torch, Run, Jump};
+    public enum PlayerModes {Idle, Torch, Run, Jump};
+    public PlayerModes _playerMode = PlayerModes.Torch;
     Rigidbody2D pRigidBody;
     SpriteRenderer spriteRenderer;
     public static PlayerController _playerController = null;
@@ -54,9 +55,20 @@ public class PlayerController : MonoBehaviour
         // debug
         if (Input.GetKeyDown(KeyCode.K))
         {
-            --playerHealth;
-            if (playerHealth <= 0)
-                gm.ChangeGameState(GameController.MyGameState.Over);
+            DamagePlayer();
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            if (_playerMode != PlayerModes.Torch)
+            {
+                Debug.Log("Going into torch mode");
+                _playerMode = PlayerModes.Torch;
+            }
+            else
+            {
+                Debug.Log("Going into Idle mode");
+                _playerMode = PlayerModes.Idle;
+            }
         }
         // Update only when Game gamemode is active
         if (gm != null && gm.current_state == GameController.MyGameState.Game)
@@ -92,9 +104,17 @@ public class PlayerController : MonoBehaviour
                     pRigidBody.AddForce(new Vector2(0, jumpAxis * jumpHeight));
                 }
             }
+            if (playerHealth <= 0)
+                gm.ChangeGameState(GameController.MyGameState.Over);
         }
     }
-    public void SetPlayerSprite(PlayerSpritesNm spr)
+    public void DamagePlayer()
+    {
+        --playerHealth;
+        if (playerHealth <= 0)
+            gm.ChangeGameState(GameController.MyGameState.Over);
+    }
+    public void SetPlayerSprite(PlayerModes spr)
     {
         this.spriteRenderer.sprite = PlayerSprites[((int)spr)];
     }

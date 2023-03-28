@@ -75,6 +75,10 @@ public class RatController : MonoBehaviour
                 outOfTorchArea= true;
         }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+    }
     void Update()
     {
         // mouse events
