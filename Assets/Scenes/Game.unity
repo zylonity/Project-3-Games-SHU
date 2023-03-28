@@ -334,7 +334,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 1088566117, guid: 67c6171b38308834ca558263f44ff9f9, type: 3}
+  m_Sprite: {fileID: -778949684, guid: 8a191a21355c40143b147ef0850d8afc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -423,7 +423,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerMode: 0
   floorCheck: {fileID: 414835991}
-  playerHealth: 0
+  maxHealth: 10
+  playerHealth: 10
   moveSpeed: 5
   maxMovementSpeed: 2
   jumpHeight: 5

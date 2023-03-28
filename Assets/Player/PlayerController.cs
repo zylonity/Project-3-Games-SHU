@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public enum PlayerModes {Idle, Torch, Run, Jump};
-    public PlayerModes _playerMode = PlayerModes.Torch;
+    private Animator _animator = null;
+    public bool walk = false;
+    public bool holdTorch = false;
+    public bool ponchoOn = false;
+    public bool atacking = false;
+
     Rigidbody2D pRigidBody;
     SpriteRenderer spriteRenderer;
     public static PlayerController _playerController = null;
     public GameObject floorCheck;
 
-    public readonly int maxHealth = 10;
-    public int playerHealth = 0;
+    public int maxHealth = 10;
+    public int playerHealth = 10;
     [SerializeField]
     float moveSpeed = 5f;
 
@@ -40,7 +44,9 @@ public class PlayerController : MonoBehaviour
         CameraController._camcont.playerTransform = this.transform;
         // assigne gamemode
         gm = GameController._gameController;
-        playerHealth = maxHealth;
+        maxHealth = playerHealth;
+        Debug.Assert(maxHealth != 0,"Health is 0 set it!");
+        _animator = gameObject.GetComponent<Animator>();
         
     }
     void OnDestroy()
@@ -57,19 +63,43 @@ public class PlayerController : MonoBehaviour
         {
             DamagePlayer();
         }
+        // Torch key
         if (Input.GetKeyDown(KeyCode.T))
         {
-            if (_playerMode != PlayerModes.Torch)
+            if (!holdTorch)
             {
-                Debug.Log("Going into torch mode");
-                _playerMode = PlayerModes.Torch;
+                Debug.Log("Holding torch");
+                holdTorch = true;
+                ponchoOn = false;
             }
             else
+                holdTorch = false;
+        }
+        // Poncho key
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (!ponchoOn)
             {
-                Debug.Log("Going into Idle mode");
-                _playerMode = PlayerModes.Idle;
+                Debug.Log("Poncho on");
+                ponchoOn = true;
+                holdTorch = false;
+            }
+            else
+                ponchoOn = false;
+        }
+        // Attack key
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (!atacking)
+            {
+                Debug.Log("Atacking");
+                atacking = true;
+                ponchoOn = false;
+                holdTorch = false;
             }
         }
+
+
         // Update only when Game gamemode is active
         if (gm != null && gm.current_state == GameController.MyGameState.Game)
         {
@@ -77,6 +107,7 @@ public class PlayerController : MonoBehaviour
 
             if (xAxis > 0.1 || xAxis < -0.1)
             {
+                walk = true;
                 pRigidBody.AddForce(new Vector2(xAxis * moveSpeed, 0));
                 if (pRigidBody.velocity.x > maxMovementSpeed || pRigidBody.velocity.x < -maxMovementSpeed)
                 {
@@ -89,7 +120,8 @@ public class PlayerController : MonoBehaviour
                     spriteRenderer.flipX = true;
 
             }
-
+            else
+                walk = false;
             float jumpAxis = Input.GetAxis("Jump");
 
             int layerMask = ~(1 << LayerMask.NameToLayer("Triggers"));
@@ -106,6 +138,14 @@ public class PlayerController : MonoBehaviour
             }
             if (playerHealth <= 0)
                 gm.ChangeGameState(GameController.MyGameState.Over);
+            // Update animator
+            _animator.SetBool("Walk", walk);
+            _animator.SetBool("Poncho", ponchoOn);
+            _animator.SetBool("Torch", holdTorch);
+            _animator.SetBool("Atack", atacking);
+            if(atacking)
+                if(!_animator.IsInTransition(0))
+                    atacking = false;
         }
     }
     public void DamagePlayer()
@@ -113,10 +153,6 @@ public class PlayerController : MonoBehaviour
         --playerHealth;
         if (playerHealth <= 0)
             gm.ChangeGameState(GameController.MyGameState.Over);
-    }
-    public void SetPlayerSprite(PlayerModes spr)
-    {
-        this.spriteRenderer.sprite = PlayerSprites[((int)spr)];
     }
 }
 

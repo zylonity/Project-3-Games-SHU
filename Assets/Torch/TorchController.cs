@@ -17,7 +17,7 @@ public class TorchController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_playerController._playerMode == PlayerController.PlayerModes.Torch)
+        if(_playerController.holdTorch)
             _torchArea.SetActive(true);
         else
             _torchArea.SetActive(false);
