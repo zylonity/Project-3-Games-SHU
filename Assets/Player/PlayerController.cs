@@ -27,8 +27,6 @@ public class PlayerController : MonoBehaviour
     float jumpHeight = 5f;
 
     bool touchingFloor = false;
-
-    [SerializeField] Sprite[] PlayerSprites = new Sprite[4];
     // gamemode reference
     private GameController gm = null;
     private void Awake()
@@ -54,7 +52,7 @@ public class PlayerController : MonoBehaviour
         // clear camera pointer if destroyed
         CameraController._camcont.playerTransform = null;
     }
-
+  
     // Update is called once per frame
     void Update()
     {

@@ -21,7 +21,6 @@ public class RatSpawner : MonoBehaviour
     void Start()
     {
         probability_max = (int)(1.0 / probability) + 1;
-        ratPrefab.GetComponent<RatController>().playerTransform = playerTransform;
     }
 
     // Update is called once per frame

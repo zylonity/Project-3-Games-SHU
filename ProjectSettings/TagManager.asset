@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Rat
   - TorchCircle
+  - BiteTrigger
   layers:
   - Default
   - TransparentFX

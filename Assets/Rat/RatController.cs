@@ -14,31 +14,25 @@ public class RatController : MonoBehaviour
     [SerializeField, Range(0,1)] private float RatCheckTime = 0.1f;
     public float RatCheckTimer = 0.0f;
     // torchok is affected by torch
-    private enum RatStates { wander, chase, torchok, dying };
-    private bool outOfTorchArea = false;
-    private float lightAffectedTimer = 0.0f;
+    private enum RatStates { wander, chase, affected, dying };
+    private bool outOfDangerArea = false;
+    private float affectedTimer = 0.0f;
     private RatStates state = RatStates.wander;
 
-    public Transform playerTransform = null;
+    private PlayerController _player;
+    private Transform playerTransform = null;
 
     private Transform _transform = null;
     private Renderer _renderer = null;
     private SpriteRenderer _sprRenderer = null;
     private Rigidbody2D _rb = null;
 
-    [SerializeField] Sprite Idle;
-    [SerializeField] Sprite Walk;
-    [SerializeField] Sprite Dead;
-    Animation Idle_an;
-    Animation Walk_an;
-    Animation Dead_an;
-
     [SerializeField, Range(0, 100)] private float despawnOffScreenTime = 1.0f;
     [SerializeField, Range(0, 2)]   private float RatMinSpeed = 1.0f;
     [SerializeField, Range(2, 10)]  private float RatMaxSpeed = 5.0f;
     [SerializeField, Range(1, 10)]  private float PlayerDetectDistance = 5.0f;
     [SerializeField, Range(0, 1)]   private float WanderSlowDown = 0.3f;
-    [SerializeField]                private int   ticksTillDecide = 5;
+    [SerializeField]                private int   ticksTillDecideDirectionInWanderMode = 5;
     [SerializeField, Range(0, 3)]   private float lightAffectedTime = 1.0f;
     private float RandomSpeed = 1.0f;
     private ushort health = 2;
@@ -47,6 +41,8 @@ public class RatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _player = PlayerController._playerController;
+        playerTransform = _player.transform;
         RandomSpeed = UnityEngine.Random.Range(RatMinSpeed, RatMaxSpeed);
         _rb = GetComponent<Rigidbody2D>();
         _renderer = GetComponent<Renderer>();
@@ -59,25 +55,24 @@ public class RatController : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("TorchCircle"))
+        bool bite = other.CompareTag("BiteTrigger");
+        if (other.CompareTag("TorchCircle") || bite)
         {
-            Debug.Log("Rat Entered torch area");
+            Debug.Log("Rat entered trigger");
+            if (bite && state != RatStates.affected)
+                _player.DamagePlayer();
             if (state != RatStates.dying)
-                state = RatStates.torchok;
+                state = RatStates.affected;
         }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("TorchCircle"))
+        if (other.CompareTag("TorchCircle") || other.CompareTag("BiteTrigger"))
         {
             Debug.Log("Rat Entered torch area");
             if(state!= RatStates.dying)
-                outOfTorchArea= true;
+                outOfDangerArea = true;
         }
-    }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        
     }
     void Update()
     {
@@ -94,7 +89,7 @@ public class RatController : MonoBehaviour
 
                 if (math.abs(dist) < PlayerDetectDistance)
                 {
-                    if (state != RatStates.torchok)
+                    if (state != RatStates.affected)
                     {
                         state = RatStates.chase;
                         if (dist > 0.0f)
@@ -125,7 +120,7 @@ public class RatController : MonoBehaviour
                 else
                 {
                     state = RatStates.wander;
-                    if (ticks > ticksTillDecide)
+                    if (ticks > ticksTillDecideDirectionInWanderMode)
                     {
                         ticks = 0;
                         // if wandering chouse random direction per tick
@@ -141,13 +136,13 @@ public class RatController : MonoBehaviour
                         }
                     }
                 }
-                if (outOfTorchArea)
+                if (outOfDangerArea)
                 {
-                    lightAffectedTimer += Time.deltaTime;
-                    if (lightAffectedTimer > lightAffectedTime)
+                    affectedTimer += Time.deltaTime;
+                    if (affectedTimer > lightAffectedTime)
                     {
-                        lightAffectedTimer = 0;
-                        outOfTorchArea= false;
+                        affectedTimer = 0;
+                        outOfDangerArea = false;
                         state = RatStates.wander;
                     }
                 }
@@ -161,23 +156,18 @@ public class RatController : MonoBehaviour
         }
         if (health <= 0)
         {
-            //
-            // animate death
-            // when died
-            // state = RatStates.dead
-            //
-            if (!Dead_an.enabled)
                 Destroy(gameObject);
         }
         Vector2 speed = new Vector2(0.0f, 0.0f);
-        switch (state) {
+        switch (state) 
+        {
             case RatStates.wander:
                 speed.x = RandomSpeed * WanderSlowDown;
                 break;
             case RatStates.chase:
                 speed.x = RandomSpeed;
                 break;
-            case RatStates.torchok:
+            case RatStates.affected:
                 speed.x = RandomSpeed * 2.0f;
                 break;
         }
