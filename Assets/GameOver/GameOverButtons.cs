@@ -14,6 +14,10 @@ public class GameOverButtons : MonoBehaviour
         _canvas = gameObject.GetComponent<Canvas>();
         Debug.Assert(_canvas != null, "Canvas isn't assigned", this);
     }
+    public void ReturnButtonPressed()
+    {
+        gm.ChangeGameState(GameController.MyGameState.Game);
+    }
     public void PlayAgainButtonPressed() 
     {
         gm.ChangeGameState(GameController.MyGameState.Game);
@@ -27,5 +31,7 @@ public class GameOverButtons : MonoBehaviour
     {
         if (gm.current_state == GameController.MyGameState.Over)
             _canvas.enabled = true;
+        else 
+            _canvas.enabled = false;
     }
 }

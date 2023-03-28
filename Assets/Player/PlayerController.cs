@@ -150,7 +150,10 @@ public class PlayerController : MonoBehaviour
     {
         --playerHealth;
         if (playerHealth <= 0)
+        {
+            playerHealth = maxHealth;
             gm.ChangeGameState(GameController.MyGameState.Over);
+        }
     }
 }
 
