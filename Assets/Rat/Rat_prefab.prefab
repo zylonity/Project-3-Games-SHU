@@ -50,16 +50,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RatCheckTime: 0.1
   RatCheckTimer: 0
-  playerTransform: {fileID: 0}
-  Idle: {fileID: 1150653220, guid: 1a5b926ec701c6e49972ac08ba3a8a9a, type: 3}
-  Walk: {fileID: 774340420, guid: 65f5de9106769074caf98c658c8cf506, type: 3}
-  Dead: {fileID: -1945721987, guid: db512ac1054e76b4e8947dde393af062, type: 3}
   despawnOffScreenTime: 0
   RatMinSpeed: 2
   RatMaxSpeed: 3
   PlayerDetectDistance: 5
   WanderSlowDown: 0.3
-  ticksTillDecide: 5
+  ticksTillDecideDirectionInWanderMode: 5
   lightAffectedTime: 0.62
 --- !u!212 &1812330982009813646
 SpriteRenderer:
@@ -123,7 +119,7 @@ Animator:
   m_GameObject: {fileID: 7568920706430394899}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 579209dd3b192ea439f81b293514693e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

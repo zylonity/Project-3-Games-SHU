@@ -7,6 +7,7 @@ TagManager:
   - Rat
   - TorchCircle
   - BiteTrigger
+  - BandageItem
   layers:
   - Default
   - TransparentFX
