@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Atacking : MonoBehaviour
 {
+    private Animator _animator = null;
     // cached components
     [SerializeField] private GameObject _dagger = null;
     [SerializeField, Range(3, 10)] private float daggerSlashHeight = 4.0f;
@@ -20,6 +21,7 @@ public class Atacking : MonoBehaviour
         _dagger.SetActive(false);
         _daggerCollider = _dagger.GetComponent<Collider2D>();
         _colliderInitPos = _daggerCollider.offset;
+        _animator = GetComponent<Animator>();   
     }
     
     // Update is called once per frame
@@ -35,6 +37,15 @@ public class Atacking : MonoBehaviour
             }
             _dagger.SetActive(true);
             playerStartedAtack = true;
+        }
+        else 
+        {
+
+            if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Atack") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            {
+                _playerController.atacking = false;
+                _animator.SetBool("Atack", false);
+            }
         }
         // player finished atack
         if (!_playerController.atacking && playerStartedAtack) 

@@ -519,7 +519,6 @@ MonoBehaviour:
   holdTorch: 0
   ponchoOn: 0
   atacking: 0
-  finishedAtacking: 0
   paused: 0
   right: 0
   gameOverGUI: {fileID: 2060841507}
@@ -2765,7 +2764,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 0.2}
+  m_Size: {x: 0.3, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &1475162170
 GameObject:

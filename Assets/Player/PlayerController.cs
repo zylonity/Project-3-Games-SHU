@@ -165,11 +165,6 @@ public class PlayerController : MonoBehaviour
             _animator.SetBool("Walk", walk);
             _animator.SetBool("Poncho", ponchoOn);
             _animator.SetBool("Torch", holdTorch);
-            if (_animator.GetBool("AtackFinished"))
-            {
-                atacking = false;
-                _animator.SetBool("Atack", false);
-            }
         }
     }
     public void DamagePlayer()
