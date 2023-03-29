@@ -174,10 +174,6 @@ public class RatController : MonoBehaviour
             if(despawnOffScreenTimer > despawnOffScreenTime)
                 Destroy(gameObject);
         }
-        //if (state == RatStates.dying && _animator.GetCurrentAnimatorStateInfo(0).IsName("Dying") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-        //{
-        //    Destroy(gameObject);
-        //}
         Vector2 speed = new Vector2(0.0f, 0.0f);
         switch (state) 
         {
@@ -207,5 +203,12 @@ public class RatController : MonoBehaviour
         // animator updates
         _animator.SetBool("Move", move);
         _animator.SetBool("Dying", state == RatStates.dying);
+    }
+    private void LateUpdate()
+    {
+       if (state == RatStates.dying && _animator.GetCurrentAnimatorStateInfo(0).IsName("Dying") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+       {
+           Destroy(gameObject);
+       }
     }
 }
