@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Animator _animator;
-    public bool walk, holdTorch, ponchoOn, atacking, paused = false;
+    public bool walk, holdTorch, ponchoOn, atacking, paused, right = false;
     public GameObject gameOverGUI, playerGUI, pauseGUI;
 
 
@@ -76,17 +76,6 @@ public class PlayerController : MonoBehaviour
             else
                 ponchoOn = false;
         }
-        // Attack key
-        else  if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (!atacking)
-            {
-                Debug.Log("Atacking");
-                atacking = true;
-                ponchoOn = false;
-                holdTorch = false;
-            }
-        }
         // pause key
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -116,6 +105,18 @@ public class PlayerController : MonoBehaviour
             }
 
 
+        // Attack key
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (!atacking)
+            {
+                Debug.Log("Atacking");
+                ponchoOn = false;
+                holdTorch = false;
+                atacking = true;
+                _animator.SetBool("Atack", true);
+            }
+        }
         // Update only when Game gamemode is active
         if (playerHealth >= 1)
         {
@@ -131,9 +132,16 @@ public class PlayerController : MonoBehaviour
                 }
 
                 if (xAxis > 0.1)
+                {
+                    right = true;
                     spriteRenderer.flipX = false;
+                }
+
                 else if (xAxis < -0.1)
+                {
+                    right = false;
                     spriteRenderer.flipX = true;
+                }
 
             }
             else
@@ -157,10 +165,11 @@ public class PlayerController : MonoBehaviour
             _animator.SetBool("Walk", walk);
             _animator.SetBool("Poncho", ponchoOn);
             _animator.SetBool("Torch", holdTorch);
-            _animator.SetBool("Atack", atacking);
-            if(atacking)
-                if(!_animator.IsInTransition(0))
-                    atacking = false;
+            if (_animator.GetBool("AtackFinished"))
+            {
+                atacking = false;
+                _animator.SetBool("Atack", false);
+            }
         }
     }
     public void DamagePlayer()

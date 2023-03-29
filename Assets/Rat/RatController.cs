@@ -63,6 +63,7 @@ public class RatController : MonoBehaviour
             {
                 Debug.Log("Rat killed by dagger \"Ya tebya porodil, ya tebya i ubyu!\"");
                 state = RatStates.dying;
+                collision.enabled = false;
             }
         }
     }
@@ -204,7 +205,7 @@ public class RatController : MonoBehaviour
             }
         }
         // animator updates
-        _animator.SetBool("Chase", state == RatStates.chase);
+        _animator.SetBool("Move", move);
         _animator.SetBool("Dying", state == RatStates.dying);
     }
 }

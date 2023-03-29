@@ -8,6 +8,7 @@ TagManager:
   - TorchCircle
   - BiteTrigger
   - BandageItem
+  - Dagger
   layers:
   - Default
   - TransparentFX
