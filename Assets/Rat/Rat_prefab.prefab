@@ -49,8 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RatCheckTime: 0.1
-  RatCheckTimer: 0
-  despawnOffScreenTime: 0
+  despawnOffScreenTime: 30
   RatMinSpeed: 2
   RatMaxSpeed: 3
   PlayerDetectDistance: 5

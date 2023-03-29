@@ -7,12 +7,13 @@ public class RatController : MonoBehaviour
 {
     private enum RatStates { wander, chase, affected, dying };
     private RatStates state = RatStates.wander;
-    private bool Right, move, outOfDangerArea = false; // movements
+    private bool Right, move, outOfDangerArea, dead = false; // movements
 
     private float RatCheckTimer = 0.0f;
     private float affectedTimer = 0.0f;
-    private float despawnOffScreenTimer = 0.0f;
+    private float despawnOffScreenDeathTimer = 0.0f;
 
+    [SerializeField, Range(1, 10)]private ushort health = 2;
     [SerializeField, Range(0, 1)] private float RatCheckTime = 0.1f;
     [SerializeField, Range(0, 100)] private float despawnOffScreenTime = 1.0f;
     [SerializeField, Range(0, 2)] private float RatMinSpeed = 1.0f;
@@ -24,18 +25,16 @@ public class RatController : MonoBehaviour
 
 
     // other cached components
-    private PlayerController _player;
+    private PlayerController _player = null;
     private Transform _playerTransform = null;
 
     // this cached components
-    private Transform _transform = null;
     private Renderer _renderer = null;
     private SpriteRenderer _sprRenderer = null;
     private Rigidbody2D _rb = null;
     private Animator _animator = null;
 
     private float RandomSpeed = 1.0f;
-    private ushort health = 2;
     private int ticks = 0;
     // Start is called before the first frame update
     void Start()
@@ -47,7 +46,6 @@ public class RatController : MonoBehaviour
         _renderer = GetComponent<Renderer>();
         _sprRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
-
         RandomSpeed = UnityEngine.Random.Range(RatMinSpeed, RatMaxSpeed);
         float random_scale = RandomSpeed / RatMaxSpeed;
         transform.localScale = new Vector3(transform.lossyScale.x * random_scale, transform.lossyScale.y * random_scale, transform.lossyScale.z);
@@ -58,12 +56,12 @@ public class RatController : MonoBehaviour
         // cant torture poor rattie anymore aren't you
         if (state != RatStates.dying)
         {
-
             if (collision.CompareTag("Dagger"))
             {
-                Debug.Log("Rat killed by dagger \"Ya tebya porodil, ya tebya i ubyu!\"");
-                state = RatStates.dying;
-                collision.enabled = false;
+                //Debug.Log("Rat killed by dagger \"Ya tebya porodil, ya tebya i ubyu!\"");
+                state = RatStates.affected;
+                DamageRat();
+                outOfDangerArea = true;
             }
         }
     }
@@ -74,7 +72,7 @@ public class RatController : MonoBehaviour
             bool bite = other.CompareTag("BiteTrigger");
             if (other.CompareTag("TorchCircle") || bite)
             {
-                Debug.Log("Rat entered trigger");
+                //Debug.Log("Rat entered trigger");
                 if (bite && state != RatStates.affected)
                     _player.DamagePlayer();
                 state = RatStates.affected;
@@ -87,7 +85,7 @@ public class RatController : MonoBehaviour
         {
             if (other.CompareTag("TorchCircle") || other.CompareTag("BiteTrigger"))
             {
-                Debug.Log("Rat Entered torch area");
+                // Debug.Log("Rat Entered torch area");
                 outOfDangerArea = true;
             }
         }
@@ -168,10 +166,10 @@ public class RatController : MonoBehaviour
                 }
             }
         }
-        if (!_renderer.isVisible)
+        if (!_renderer.isVisible || dead)
         {
-            despawnOffScreenTimer += Time.deltaTime;
-            if(despawnOffScreenTimer > despawnOffScreenTime)
+            despawnOffScreenDeathTimer += Time.deltaTime;
+            if(despawnOffScreenDeathTimer > despawnOffScreenTime)
                 Destroy(gameObject);
         }
         Vector2 speed = new Vector2(0.0f, 0.0f);
@@ -186,6 +184,7 @@ public class RatController : MonoBehaviour
             case RatStates.affected:
                 speed.x = RandomSpeed * 2.0f;
                 break;
+            default: break;
         }
         if (move)
         {
@@ -204,11 +203,19 @@ public class RatController : MonoBehaviour
         _animator.SetBool("Move", move);
         _animator.SetBool("Dying", state == RatStates.dying);
     }
+    private void DamageRat()
+    {
+        --health;
+        if (health <= 0)
+            state = RatStates.dying;
+    }
     private void LateUpdate()
     {
        if (state == RatStates.dying && _animator.GetCurrentAnimatorStateInfo(0).IsName("Dying") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
        {
-           Destroy(gameObject);
+            this.GetComponent<Collider2D>().enabled = false;
+            _rb.simulated = false;
+            dead = true;
        }
     }
 }
