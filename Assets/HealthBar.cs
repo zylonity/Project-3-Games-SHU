@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class HealthBar : MonoBehaviour
 {
-    private PlayerController pl = null;
-    private RectTransform _rectTansform = null;
+    public PlayerController pl;
+
+    private RectTransform _rectTansform;
     private Vector3 standartScale;
     // Start is called before the first frame update
     private void Awake()
     {
         _rectTansform = GetComponent<RectTransform>();
         standartScale = _rectTansform.localScale;
-    }
-    void Start()
-    {
-        pl = PlayerController._playerController;
     }
 
     // Update is called once per frame

@@ -1,23 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Buttons : MonoBehaviour
 {
-    private GameController gm = null;
-    // Start is called before the first frame update
-    void Start()
+
+    public void PlayButton()
     {
-        gm = GameController._gameController;
-        Debug.Assert(gm != null);
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(1);
     }
-    public void ButtonPressed()
+
+    public void MainMenu()
     {
-        gm.ChangeGameState(GameController.MyGameState.Game);
+        SceneManager.LoadScene(0);
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

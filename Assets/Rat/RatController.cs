@@ -41,7 +41,7 @@ public class RatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _player = PlayerController._playerController;
+        _player = GameObject.Find("Player").GetComponent<PlayerController>();
         playerTransform = _player.transform;
         RandomSpeed = UnityEngine.Random.Range(RatMinSpeed, RatMaxSpeed);
         _rb = GetComponent<Rigidbody2D>();

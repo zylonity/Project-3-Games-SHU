@@ -4,19 +4,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Animator _animator = null;
-    public bool walk = false;
-    public bool holdTorch = false;
-    public bool ponchoOn = false;
-    public bool atacking = false;
+    private Animator _animator;
+    public bool walk, holdTorch, ponchoOn, atacking = false;
+    public GameObject gameOverGUI, playerGUI, pauseGUI;
+
 
     Rigidbody2D pRigidBody;
     SpriteRenderer spriteRenderer;
-    public static PlayerController _playerController = null;
     public GameObject floorCheck;
 
     public int maxHealth = 10;
     public int playerHealth = 10;
+
     [SerializeField]
     float moveSpeed = 5f;
 
@@ -26,31 +25,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(0, 100)]
     float jumpHeight = 5f;
 
-    bool touchingFloor = false;
-    // gamemode reference
-    private GameController gm = null;
-    private void Awake()
+    void KillPlayer()
     {
-        _playerController = this;
+        playerGUI.SetActive(false);
+        pauseGUI.SetActive(true);
+        Time.timeScale = 0;
     }
+
+
+
     // Start is called before the first frame update
     void Start()
     {
         pRigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         // assign camera player pos reference to player transform
-        CameraController._camcont.playerTransform = this.transform;
-        // assigne gamemode
-        gm = GameController._gameController;
         maxHealth = playerHealth;
         Debug.Assert(maxHealth != 0,"Health is 0 set it!");
         _animator = gameObject.GetComponent<Animator>();
         
-    }
-    void OnDestroy()
-    {
-        // clear camera pointer if destroyed
-        CameraController._camcont.playerTransform = null;
     }
   
     // Update is called once per frame
@@ -99,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
 
         // Update only when Game gamemode is active
-        if (gm != null && gm.current_state == GameController.MyGameState.Game)
+        if (playerHealth >= 1)
         {
             float xAxis = Input.GetAxis("Horizontal");
 
@@ -128,14 +121,14 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(floorCheck.transform.position, Vector2.down * 0.05f, Color.green);
             if (hit.collider != null)
             {
-                print("touching");
+                //print("touching");
                 if (jumpAxis > 0.1) 
                 {
                     pRigidBody.AddForce(new Vector2(0, jumpAxis * jumpHeight));
                 }
             }
             if (playerHealth <= 0)
-                gm.ChangeGameState(GameController.MyGameState.Over);
+                KillPlayer();
             // Update animator
             _animator.SetBool("Walk", walk);
             _animator.SetBool("Poncho", ponchoOn);
@@ -151,10 +144,10 @@ public class PlayerController : MonoBehaviour
         --playerHealth;
         if (playerHealth <= 0)
         {
-            playerHealth = maxHealth;
-            gm.ChangeGameState(GameController.MyGameState.Over);
+            KillPlayer();
         }
     }
+
 }
 
         
