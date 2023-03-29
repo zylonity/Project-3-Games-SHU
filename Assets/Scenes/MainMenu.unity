@@ -209,7 +209,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1491321749}
         m_TargetAssemblyTypeName: Buttons, Assembly-CSharp
-        m_MethodName: PlayButton
+        m_MethodName: StartGameButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

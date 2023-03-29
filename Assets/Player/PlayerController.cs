@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Animator _animator;
-    public bool walk, holdTorch, ponchoOn, atacking = false;
+    public bool walk, holdTorch, ponchoOn, atacking, paused = false;
     public GameObject gameOverGUI, playerGUI, pauseGUI;
 
 
@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     void KillPlayer()
     {
         playerGUI.SetActive(false);
-        pauseGUI.SetActive(true);
+        gameOverGUI.SetActive(true);
         Time.timeScale = 0;
     }
 
@@ -39,23 +39,21 @@ public class PlayerController : MonoBehaviour
     {
         pRigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        // assign camera player pos reference to player transform
         maxHealth = playerHealth;
         Debug.Assert(maxHealth != 0,"Health is 0 set it!");
         _animator = gameObject.GetComponent<Animator>();
-        
     }
   
     // Update is called once per frame
     void Update()
     {
-        // debug
+        // debug damage player
         if (Input.GetKeyDown(KeyCode.K))
         {
             DamagePlayer();
         }
         // Torch key
-        if (Input.GetKeyDown(KeyCode.T))
+        else if (Input.GetKeyDown(KeyCode.T))
         {
             if (!holdTorch)
             {
@@ -67,7 +65,7 @@ public class PlayerController : MonoBehaviour
                 holdTorch = false;
         }
         // Poncho key
-        if (Input.GetKeyDown(KeyCode.P))
+        else if (Input.GetKeyDown(KeyCode.P))
         {
             if (!ponchoOn)
             {
@@ -79,7 +77,7 @@ public class PlayerController : MonoBehaviour
                 ponchoOn = false;
         }
         // Attack key
-        if (Input.GetKeyDown(KeyCode.F))
+        else  if (Input.GetKeyDown(KeyCode.F))
         {
             if (!atacking)
             {
@@ -89,6 +87,33 @@ public class PlayerController : MonoBehaviour
                 holdTorch = false;
             }
         }
+        // pause key
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!paused)
+            {
+                Time.timeScale = 0;
+                playerGUI.SetActive(false);
+                pauseGUI.SetActive(true);
+                paused = true;
+            }
+            else
+            {
+                Time.timeScale = 1.0f;
+                playerGUI.SetActive(true);
+                pauseGUI.SetActive(false);
+                paused = false;
+            }
+        }
+        // turn off pause meny if player presser return button in that ...
+        else if (paused)
+            if (Time.timeScale == 1.0f)
+            {
+                Time.timeScale = 1.0f;
+                playerGUI.SetActive(true);
+                pauseGUI.SetActive(false);
+                paused = false;
+            }
 
 
         // Update only when Game gamemode is active
@@ -127,8 +152,7 @@ public class PlayerController : MonoBehaviour
                     pRigidBody.AddForce(new Vector2(0, jumpAxis * jumpHeight));
                 }
             }
-            if (playerHealth <= 0)
-                KillPlayer();
+
             // Update animator
             _animator.SetBool("Walk", walk);
             _animator.SetBool("Poncho", ponchoOn);
