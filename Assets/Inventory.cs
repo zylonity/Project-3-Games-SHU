@@ -26,6 +26,7 @@ public class Inventory : MonoBehaviour
         public int Durability = 100;
         public int durabilityLeft = 0;
         public int Number = 1;
+        public float DurPercent = 0;
         private int breakPercent = 0;
         private bool timeBrakable = false;
         private float breakTimer = 0.0f;
@@ -49,6 +50,7 @@ public class Inventory : MonoBehaviour
                         UseItem(breakPercent);
                     }
                 }
+                DurPercent = (float)durabilityLeft / Durability;
             }
         }
         public void SetupItem(Item item, int _Number = 1, int _Durability = 100, int _stack = 1, bool _timeBreakable = false, float _breakTime = 0.0f, int _breakPercent = 0)
@@ -65,6 +67,7 @@ public class Inventory : MonoBehaviour
             }
             _itemID = item;
             name = item.ToString();
+            DurPercent = (float)durabilityLeft / Durability;
         }
         public bool UseItem(int percent = 10)
         {
@@ -78,6 +81,8 @@ public class Inventory : MonoBehaviour
                     durabilityLeft = Durability;
                     --Number;
                 }
+                else
+                    DurPercent = (float)durabilityLeft / Durability;
             }
             return used;
         }
@@ -108,6 +113,10 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject poncho_img_obj = null;
     [SerializeField] private GameObject torch_img_obj = null;
 
+    [SerializeField] private GameObject bandage_DurBar = null;
+    [SerializeField] private GameObject poncho_DurBar = null;
+    [SerializeField] private GameObject torch_DurBar = null;
+
     private Image bandage_img = null;
     private Image poncho_img = null;
     private Image torch_img = null;
@@ -115,7 +124,9 @@ public class Inventory : MonoBehaviour
     TextMeshProUGUI bandage_count_text = null;
     TextMeshProUGUI poncho_count_text  = null;
     TextMeshProUGUI torch_count_text = null;
-    public Items Torch, Bandage, Poncho;
+    public Items Torch = new Items();
+    public Items Bandage = new Items();
+    public Items Poncho = new Items();
     // Start is called before the first frame update
     void Start()
     {
@@ -145,5 +156,11 @@ public class Inventory : MonoBehaviour
         poncho_count_text.text = Poncho.Number.ToString();
         bandage_count_text.text = Bandage.Number.ToString();
         torch_count_text.text = Torch.Number.ToString();
+
+        poncho_DurBar.transform.localScale = new Vector3(poncho_DurBar.transform.localScale.x * Poncho.DurPercent, poncho_DurBar.transform.localScale.y, poncho_DurBar.transform.localScale.z);
+
+        bandage_DurBar.transform.localScale = new Vector3(bandage_DurBar.transform.localScale.x * Bandage.DurPercent, bandage_DurBar.transform.localScale.y, bandage_DurBar.transform.localScale.z);
+
+        torch_DurBar.transform.localScale = new Vector3(torch_DurBar.transform.localScale.x * Torch.DurPercent, torch_DurBar.transform.localScale.y, torch_DurBar.transform.localScale.z);
     }
 }
