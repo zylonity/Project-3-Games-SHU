@@ -9,6 +9,7 @@ public class BackgroundHandler : MonoBehaviour
     public PlayerController player;
     public GameObject bgHandler;
     public GameObject background;
+    public HutSpawner hutSpawner;
     GameObject backgroundTwo;
     GameObject bgHandlerTwo;
     bool touched = false;
@@ -89,4 +90,10 @@ public class BackgroundHandler : MonoBehaviour
        
     }
     
+
+    public void ParentHut(GameObject hut)
+    {
+        hut.transform.parent = bgHandler.transform;
+    }
+
 }
