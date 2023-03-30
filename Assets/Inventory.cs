@@ -157,10 +157,10 @@ public class Inventory : MonoBehaviour
         bandage_count_text.text = Bandage.Number.ToString();
         torch_count_text.text = Torch.Number.ToString();
 
-        poncho_DurBar.transform.localScale = new Vector3(poncho_DurBar.transform.localScale.x * Poncho.DurPercent, poncho_DurBar.transform.localScale.y, poncho_DurBar.transform.localScale.z);
+        poncho_DurBar.transform.localScale = new Vector3(1.0f * Poncho.DurPercent, 1.0f, 1.0f);
 
-        bandage_DurBar.transform.localScale = new Vector3(bandage_DurBar.transform.localScale.x * Bandage.DurPercent, bandage_DurBar.transform.localScale.y, bandage_DurBar.transform.localScale.z);
+        bandage_DurBar.transform.localScale = new Vector3(1.0f * Bandage.DurPercent, 1.0f, 1.0f);
 
-        torch_DurBar.transform.localScale = new Vector3(torch_DurBar.transform.localScale.x * Torch.DurPercent, torch_DurBar.transform.localScale.y, torch_DurBar.transform.localScale.z);
+        torch_DurBar.transform.localScale = new Vector3(1.0f * Torch.DurPercent, 1.0f, 1.0f);
     }
 }
