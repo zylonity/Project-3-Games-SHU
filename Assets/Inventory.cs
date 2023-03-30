@@ -84,16 +84,16 @@ public class Inventory : MonoBehaviour
                     durabilityLeft = Durability;
                     --Number;
                 }
-                else
-                    DurPercent = (float)durabilityLeft / Durability;
             }
+            DurPercent = (float)durabilityLeft / Durability;
             return used;
         }
         public void NotFinishedUsageCheck()
         {
-            if(!timeBrakable)
+            if(timeBrakable)
                 if(durabilityLeft > 0 && durabilityLeft < Durability)
                     durabilityLeft = Durability;
+            DurPercent = (float)durabilityLeft / Durability;
         }
         public bool AddItem(short number = 1)
         {
@@ -154,25 +154,48 @@ public class Inventory : MonoBehaviour
         torch_count_text = torch_count_text_obj.GetComponent<TextMeshProUGUI>();
 
         _playerUI = GetComponent<GameObject>();
-        _playerController = GetComponent<PlayerController>();
+        _playerController = _player.GetComponent<PlayerController>();
         Debug.Assert( _player != null );
         Poncho.SetupItem(Items.Item.Poncho, ponchoNumber, 100, 10, true, 5.0f, 10);
         Torch.SetupItem(Items.Item.Torch, torchNumber, 100, 10, true, 10, 5);
         Bandage.SetupItem(Items.Item.Bandage, bandageNumber, 100, 10, true, 0.05f,2);
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        ItemController itm = null;
+        if (collision.CompareTag("Bandage"))
+        {
+            itm = collision.GetComponent<ItemController>();
+            if (!itm.destroy && PickItem(Inventory.Items.Item.Bandage))
+                itm.destroy = true;
+        }
+        else if (collision.CompareTag("Torch"))
+        {
+            itm = collision.GetComponent<ItemController>();
+            if (!itm.destroy && PickItem(Inventory.Items.Item.Torch))
+                itm.destroy = true;
+        }
+        else if (collision.CompareTag("Poncho"))
+        {
+            itm = collision.GetComponent<ItemController>();
+            if (!itm.destroy && PickItem(Inventory.Items.Item.Poncho))
+                itm.destroy = true;
+        }
+
+    }
     // Update is called once per frame
     void Update()
     {
         Poncho.Update(_playerController.ponchoOn && AcidRain);
-        if (_playerController.healing)
+
+        if (_playerController.healing && _playerController.playerHealth != _playerController.maxHealth)
         {
             if (Bandage.Update(true))
             {
-                if (_playerController.playerHealth + _playerController.bandageHeals < _playerController.maxHealth)
-                    _playerController.playerHealth += _playerController.bandageHeals;
-                else
-                    Bandage.AddItem();
+                _playerController.playerHealth += _playerController.bandageHeals;
+                if (_playerController.playerHealth > _playerController.maxHealth)
+                    _playerController.playerHealth = _playerController.maxHealth;
             }
         }
         else
@@ -189,6 +212,7 @@ public class Inventory : MonoBehaviour
         bandage_DurBar.transform.localScale = new Vector3(1.0f * Bandage.DurPercent, 1.0f, 1.0f);
 
         torch_DurBar.transform.localScale = new Vector3(1.0f * Torch.DurPercent, 1.0f, 1.0f);
+
         if (startMessageTimer)
         {
             startMessageTimer = false;
@@ -248,7 +272,6 @@ public class Inventory : MonoBehaviour
                     break;
                 case Items.Item.Bandage:
                     _messege.text = "Press \'E\' to pick \"" + Bandage.name + "\"";
-                    Bandage.AddItem();
                     break;
                 case Items.Item.Torch:
                     _messege.text = "Press \'E\' to pick a \"" + Torch.name + "\"";

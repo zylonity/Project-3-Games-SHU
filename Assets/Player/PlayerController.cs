@@ -33,21 +33,6 @@ public class PlayerController : MonoBehaviour
         gameOverGUI.SetActive(true);
         Time.timeScale = 0;
     }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Bandage"))
-            if (_inventory.PickItem(Inventory.Items.Item.Bandage)) 
-                Object.Destroy(collision.GetComponent<GameObject>());
-        else if(collision.CompareTag("Torch"))
-            if(_inventory.PickItem(Inventory.Items.Item.Torch))
-                Object.Destroy(collision.GetComponent<GameObject>());
-        else if (collision.CompareTag("Poncho"))
-            if (_inventory.PickItem(Inventory.Items.Item.Poncho))
-                Object.Destroy(collision.GetComponent<GameObject>());
-
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +41,7 @@ public class PlayerController : MonoBehaviour
         maxHealth = playerHealth;
         Debug.Assert(maxHealth != 0,"Health is 0 set it!");
         _animator = gameObject.GetComponent<Animator>();
-        _inventory = GetComponent<Inventory>();
+        _inventory = GetComponentInChildren<Inventory>();
     }
   
     // Update is called once per frame
