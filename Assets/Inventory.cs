@@ -37,21 +37,23 @@ public class Inventory : MonoBehaviour
         /// <param name="item">only three are available</param>
         /// <param name="percent"> from 1 to 100</param>
         /// <returns> has item been broken for bandage is useful for heal system</returns>
-        public void Update(bool inUse = false)
+        public bool Update(bool inUse = false)
         {
+            bool used = false;
             if (inUse)
             {
                 if (timeBrakable && Number >= 1)
                 {
                     breakTimer += Time.deltaTime;
-                    if (breakTime > breakTimer)
+                    if (breakTimer > breakTime)
                     {
-                        breakTime = 0.0f;
-                        UseItem(breakPercent);
+                        breakTimer = 0.0f;
+                        used = UseItem(breakPercent);
                     }
-                }
+                };
                 DurPercent = (float)durabilityLeft / Durability;
             }
+            return used;
         }
         public void SetupItem(Item item, int _Number = 1, int _Durability = 100, int _stack = 1, bool _timeBreakable = false, float _breakTime = 0.0f, int _breakPercent = 0)
         {
@@ -85,6 +87,12 @@ public class Inventory : MonoBehaviour
                     DurPercent = (float)durabilityLeft / Durability;
             }
             return used;
+        }
+        public void NotFinishedUsageCheck()
+        {
+            if(!timeBrakable)
+                if(durabilityLeft < Durability)
+                    durabilityLeft = Durability;
         }
         public bool AddItem(short number = 1)
         {
@@ -143,14 +151,26 @@ public class Inventory : MonoBehaviour
         Debug.Assert( _player != null );
         Poncho.SetupItem(Items.Item.Poncho, ponchoNumber, 100, 10, true, 5.0f, 10);
         Torch.SetupItem(Items.Item.Torch, torchNumber, 100, 10, true, 10, 5);
-        Bandage.SetupItem(Items.Item.Bandage, bandageNumber, 1, 10);
+        Bandage.SetupItem(Items.Item.Bandage, bandageNumber, 100, 10, true, 0.05f,2);
     }
 
     // Update is called once per frame
     void Update()
     {
         Poncho.Update(_playerController.ponchoOn && AcidRain);
-        //Bandage.Update(); // dont need this one
+        if (_playerController.healing)
+        {
+            if (Bandage.Update(true))
+            {
+                if (_playerController.playerHealth + _playerController.bandageHeals < _playerController.maxHealth)
+                    _playerController.playerHealth += _playerController.bandageHeals;
+                else
+                    Bandage.AddItem();
+            }
+        }
+        else
+            Bandage.NotFinishedUsageCheck();
+
         Torch.Update(_playerController.holdTorch);
 
         poncho_count_text.text = Poncho.Number.ToString();

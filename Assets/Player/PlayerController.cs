@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private Inventory _inventory;
     private Animator _animator;
-    public bool walk, holdTorch, ponchoOn, atacking, paused, right = false;
+    public bool walk, holdTorch, ponchoOn, atacking, paused, right, healing = false;
     public GameObject gameOverGUI, playerGUI, pauseGUI;
 
 
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     public GameObject floorCheck;
 
+    [SerializeField] public int bandageHeals = 2;
     public int maxHealth = 10;
     public int playerHealth = 10;
 
@@ -47,6 +49,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // heal button
+        healing = Input.GetKey(KeyCode.G);
+
         // debug damage player
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -103,8 +108,6 @@ public class PlayerController : MonoBehaviour
                 pauseGUI.SetActive(false);
                 paused = false;
             }
-
-
         // Attack key
         if (Input.GetKeyDown(KeyCode.F))
         {
