@@ -18,8 +18,7 @@ public class HealthBar : MonoBehaviour
     {
         if (pl != null) 
         {
-            if (pl.playerHealth != pl.maxHealth)
-                _rectTansform.localScale = new Vector3(1.0f * ((float)pl.playerHealth / (float)pl.maxHealth), 1.0f, 1.0f);
+            _rectTansform.localScale = new Vector3(1.0f * ((float)pl.playerHealth / (float)pl.maxHealth), 1.0f, 1.0f);
         }
     }
 }
