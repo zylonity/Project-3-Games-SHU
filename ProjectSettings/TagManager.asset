@@ -9,6 +9,9 @@ TagManager:
   - BiteTrigger
   - BandageItem
   - Dagger
+  - Bandage
+  - Torch
+  - Poncho
   layers:
   - Default
   - TransparentFX
