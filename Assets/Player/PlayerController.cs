@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Animator _animator;
-    public bool walk, holdTorch, ponchoOn, atacking, paused, right = false;
+    public bool walk, holdTorch, ponchoOn, atacking, paused, right, healing, picking = false;
     public GameObject gameOverGUI, playerGUI, pauseGUI;
 
 
@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 
     public float moveSpeed = 5f;
     public float maxMovementSpeed = 2f;
-
+    [SerializeField, Range(0, 10)] public int bandageHeals = 2;
     [SerializeField, Range(0, 100)]
     float jumpHeight = 5f;
 
@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        healing = Input.GetKey(KeyCode.G);
+        picking = Input.GetKey(KeyCode.E);
         // debug damage player
         if (Input.GetKeyDown(KeyCode.K))
         {
