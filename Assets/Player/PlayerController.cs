@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Inventory _inventory;
     private Animator _animator;
-    public bool walk, holdTorch, ponchoOn, atacking, paused, right, healing, picking = false;
+    public bool walk, holdTorch, ponchoOn, atacking, paused, right = false;
     public GameObject gameOverGUI, playerGUI, pauseGUI;
 
 
@@ -14,15 +13,11 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     public GameObject floorCheck;
 
-    [SerializeField] public int bandageHeals = 2;
     public int maxHealth = 10;
     public int playerHealth = 10;
 
-    [SerializeField]
-    float moveSpeed = 5f;
-
-    [SerializeField, Range(0, 100)]
-    float maxMovementSpeed;
+    public float moveSpeed = 5f;
+    public float maxMovementSpeed = 2f;
 
     [SerializeField, Range(0, 100)]
     float jumpHeight = 5f;
@@ -34,19 +29,7 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Bandage"))
-            if (_inventory.PickItem(Inventory.Items.Item.Bandage)) 
-                Object.Destroy(collision.GetComponent<GameObject>());
-        else if(collision.CompareTag("Torch"))
-            if(_inventory.PickItem(Inventory.Items.Item.Torch))
-                Object.Destroy(collision.GetComponent<GameObject>());
-        else if (collision.CompareTag("Poncho"))
-            if (_inventory.PickItem(Inventory.Items.Item.Poncho))
-                Object.Destroy(collision.GetComponent<GameObject>());
 
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -56,24 +39,18 @@ public class PlayerController : MonoBehaviour
         maxHealth = playerHealth;
         Debug.Assert(maxHealth != 0,"Health is 0 set it!");
         _animator = gameObject.GetComponent<Animator>();
-        _inventory = GetComponent<Inventory>();
     }
   
     // Update is called once per frame
     void Update()
     {
-        // heal button// do not need condition everything have done in Inventory update
-        healing = Input.GetKey(KeyCode.G);
-        // picking item key check
-        picking = Input.GetKeyUp(KeyCode.E);
-
         // debug damage player
         if (Input.GetKeyDown(KeyCode.K))
         {
             DamagePlayer();
         }
         // Torch key
-        else if (Input.GetKeyDown(KeyCode.T) && _inventory.Torch.Number >= 1)
+        else if (Input.GetKeyDown(KeyCode.T))
         {
             if (!holdTorch)
             {
@@ -85,7 +62,7 @@ public class PlayerController : MonoBehaviour
                 holdTorch = false;
         }
         // Poncho key
-        else if (Input.GetKeyDown(KeyCode.P) && _inventory.Poncho.Number >= 1)
+        else if (Input.GetKeyDown(KeyCode.P))
         {
             if (!ponchoOn)
             {
@@ -123,6 +100,8 @@ public class PlayerController : MonoBehaviour
                 pauseGUI.SetActive(false);
                 paused = false;
             }
+
+
         // Attack key
         if (Input.GetKeyDown(KeyCode.F))
         {
