@@ -114,8 +114,8 @@ public class Inventory : MonoBehaviour
     private float messageTimer = 0.0f;
     private bool startMessageTimer = false;
     private GameObject _playerUI = null;
-    private PlayerController _playerController = null;  
-    [SerializeField] private GameObject _player = null;
+      
+    [SerializeField] private PlayerController _playerController = null;
 
     [SerializeField] private GameObject bandage_count_text_obj = null;
     [SerializeField] private GameObject poncho_count_text_obj = null;
@@ -154,8 +154,7 @@ public class Inventory : MonoBehaviour
         torch_count_text = torch_count_text_obj.GetComponent<TextMeshProUGUI>();
 
         _playerUI = GetComponent<GameObject>();
-        _playerController = _player.GetComponent<PlayerController>();
-        Debug.Assert( _player != null );
+
         Poncho.SetupItem(Items.Item.Poncho, ponchoNumber, 100, 10, true, 5.0f, 10);
         Torch.SetupItem(Items.Item.Torch, torchNumber, 100, 10, true, 10, 5);
         Bandage.SetupItem(Items.Item.Bandage, bandageNumber, 100, 10, true, 0.05f,2);

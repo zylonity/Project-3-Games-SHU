@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 271692917}
   - component: {fileID: 271692914}
   - component: {fileID: 271692913}
+  - component: {fileID: 271692919}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -641,7 +642,7 @@ MonoBehaviour:
   bandageNumber: 1
   AcidRain: 0
   messageTime: 1
-  _player: {fileID: 0}
+  _playerController: {fileID: 0}
   bandage_count_text_obj: {fileID: 0}
   poncho_count_text_obj: {fileID: 0}
   torch_count_text_obj: {fileID: 0}
@@ -666,6 +667,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dagger: {fileID: 1451529121}
   daggerSlashHeight: 4
+--- !u!114 &271692919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271692908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d4f4b0f64fb9345a35e5a113880ff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &331712961
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,7 +1582,7 @@ MonoBehaviour:
   bandageNumber: 1
   AcidRain: 0
   messageTime: 1
-  _player: {fileID: 271692908}
+  _playerController: {fileID: 271692915}
   bandage_count_text_obj: {fileID: 945243627}
   poncho_count_text_obj: {fileID: 789751061}
   torch_count_text_obj: {fileID: 937939334}
