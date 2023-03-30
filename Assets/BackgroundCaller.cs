@@ -13,6 +13,7 @@ public class BackgroundCaller : MonoBehaviour
         if (collision.gameObject.name == "Player")
         {
             bgH.CreateHandler();
+            this.GetComponent<BoxCollider2D>().enabled = false;
         }
     }
 }
