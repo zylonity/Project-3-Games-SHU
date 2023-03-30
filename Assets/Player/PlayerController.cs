@@ -18,11 +18,8 @@ public class PlayerController : MonoBehaviour
     public int maxHealth = 10;
     public int playerHealth = 10;
 
-    [SerializeField]
-    float moveSpeed = 5f;
-
-    [SerializeField, Range(0, 100)]
-    float maxMovementSpeed;
+    public float moveSpeed = 5f;
+    public float maxMovementSpeed = 2f;
 
     [SerializeField, Range(0, 100)]
     float jumpHeight = 5f;
