@@ -11,18 +11,22 @@ public class BackgroundHandler : MonoBehaviour
     public GameObject background;
     GameObject backgroundTwo;
     GameObject bgHandlerTwo;
-    bool touched;
+    bool touched = false;
     bool firstColliderHit = false;
     bool passedFirstCollider = false;
 
 
     float bgMoveSpeed = 0.005f;
 
-    void OnTriggerEnter2D()
+    void OnTriggerEnter2D(Collider2D collider)
     {
-        player.moveSpeed = 0;
-        player.maxMovementSpeed = 0;
-        touched = true;
+        if (collider.gameObject.layer == 7)
+        {
+            player.moveSpeed = 0;
+            player.maxMovementSpeed = 0;
+            touched = true;
+        }
+
     }
 
     private void Start()
