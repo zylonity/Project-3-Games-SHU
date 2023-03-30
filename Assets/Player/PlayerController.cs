@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(0, 100)]
     float jumpHeight = 5f;
 
+    bool canJump = true;
+
     void KillPlayer()
     {
         playerGUI.SetActive(false);
@@ -116,7 +118,20 @@ public class PlayerController : MonoBehaviour
                 _animator.SetBool("Atack", true);
             }
         }
-        // Update only when Game gamemode is active
+
+        int layerMask = ~(1 << LayerMask.NameToLayer("Triggers"));
+        //check if the player is touching the floor using a raycast
+        RaycastHit2D hit = Physics2D.Raycast(floorCheck.transform.position, Vector2.down, 0.05f, layerMask);
+        Debug.DrawRay(floorCheck.transform.position, Vector2.down * 0.05f, Color.green);
+        if (hit.collider != null)
+        {
+            canJump = true;
+        }
+
+    }
+
+    void FixedUpdate()
+    {
         if (playerHealth >= 1)
         {
             float xAxis = Input.GetAxis("Horizontal");
@@ -145,20 +160,14 @@ public class PlayerController : MonoBehaviour
             }
             else
                 walk = false;
-            float jumpAxis = Input.GetAxis("Jump");
 
-            int layerMask = ~(1 << LayerMask.NameToLayer("Triggers"));
-            //check if the player is touching the floor using a raycast
-            RaycastHit2D hit = Physics2D.Raycast(floorCheck.transform.position, Vector2.down, 0.05f, layerMask);
-            Debug.DrawRay(floorCheck.transform.position, Vector2.down * 0.05f, Color.green);
-            if (hit.collider != null)
+            float jumpAxis = Input.GetAxis("Jump");
+            if (canJump && jumpAxis > 0.1)
             {
-                //print("touching");
-                if (jumpAxis > 0.1) 
-                {
-                    pRigidBody.AddForce(new Vector2(0, jumpAxis * jumpHeight));
-                }
+                pRigidBody.AddForce(new Vector2(0, jumpAxis * jumpHeight));
+                canJump = false;
             }
+
 
             // Update animator
             _animator.SetBool("Walk", walk);
@@ -166,6 +175,8 @@ public class PlayerController : MonoBehaviour
             _animator.SetBool("Torch", holdTorch);
         }
     }
+
+
     public void DamagePlayer()
     {
         --playerHealth;
