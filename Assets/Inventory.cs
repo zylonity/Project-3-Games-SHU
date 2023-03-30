@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 //
@@ -91,7 +92,7 @@ public class Inventory : MonoBehaviour
         public void NotFinishedUsageCheck()
         {
             if(!timeBrakable)
-                if(durabilityLeft < Durability)
+                if(durabilityLeft > 0 && durabilityLeft < Durability)
                     durabilityLeft = Durability;
         }
         public bool AddItem(short number = 1)
@@ -109,6 +110,9 @@ public class Inventory : MonoBehaviour
     [SerializeField, Range(0, 64)] private int torchNumber = 1;
     [SerializeField, Range(0, 64)] private int bandageNumber = 1;
     public bool AcidRain = false;
+    [SerializeField, Range(0, 10)] private float messageTime = 1.0f;
+    private float messageTimer = 0.0f;
+    private bool startMessageTimer = false;
     private GameObject _playerUI = null;
     private PlayerController _playerController = null;  
     [SerializeField] private GameObject _player = null;
@@ -125,6 +129,8 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject poncho_DurBar = null;
     [SerializeField] private GameObject torch_DurBar = null;
 
+    [SerializeField] private TextMeshProUGUI _messege = null;
+
     private Image bandage_img = null;
     private Image poncho_img = null;
     private Image torch_img = null;
@@ -132,6 +138,7 @@ public class Inventory : MonoBehaviour
     TextMeshProUGUI bandage_count_text = null;
     TextMeshProUGUI poncho_count_text  = null;
     TextMeshProUGUI torch_count_text = null;
+
     public Items Torch = new Items();
     public Items Bandage = new Items();
     public Items Poncho = new Items();
@@ -182,5 +189,77 @@ public class Inventory : MonoBehaviour
         bandage_DurBar.transform.localScale = new Vector3(1.0f * Bandage.DurPercent, 1.0f, 1.0f);
 
         torch_DurBar.transform.localScale = new Vector3(1.0f * Torch.DurPercent, 1.0f, 1.0f);
+        if (startMessageTimer)
+        {
+            startMessageTimer = false;
+            if (messageTimer > messageTime)
+            {
+                messageTimer = 0.0f;
+                _messege.text = "";
+            }
+        }
+    }
+    public bool PickItem(Items.Item item) 
+    {
+        bool ret = false;
+        if (_playerController.picking)
+        {
+            switch (item)
+            {
+                case Items.Item.None:
+                    _messege.text = "";
+                    break;
+                case Items.Item.Poncho:
+                    ret = Poncho.AddItem();
+                    if (ret)
+                    {
+                        _messege.text = "\"" + Poncho.name + "\" Picked!";
+                    }
+                    break;
+                case Items.Item.Bandage:
+                    ret = Bandage.AddItem();
+                    if (ret)
+                    {
+                        _messege.text = "\"" + Bandage.name + "\" Picked!";
+                    }
+                    break;
+                case Items.Item.Torch:
+                    ret = Torch.AddItem();
+                    if (ret)
+                    {
+                        _messege.text = "\"" + Torch.name + "\" Picked!";
+                    }
+                    break;
+            }
+            if (item != Items.Item.None && !ret)
+                _messege.text = "Inventory is full!";
+            else
+                startMessageTimer = true;
+        }
+        else
+        {
+            switch (item)
+            {
+                case Items.Item.None:
+                    _messege.text = "";
+                    break;
+                case Items.Item.Poncho:
+                    _messege.text = "Press \'E\' to pick a \"" + Poncho.name + "\"";
+                    break;
+                case Items.Item.Bandage:
+                    _messege.text = "Press \'E\' to pick \"" + Bandage.name + "\"";
+                    Bandage.AddItem();
+                    break;
+                case Items.Item.Torch:
+                    _messege.text = "Press \'E\' to pick a \"" + Torch.name + "\"";
+                    break;
+            }
+            if(item != Items.Item.None)
+            {
+                startMessageTimer = false;
+                messageTimer = 0.0f;
+            }
+        }
+        return ret;
     }
 }
