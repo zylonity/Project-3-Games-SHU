@@ -23,7 +23,9 @@ public class Inventory : MonoBehaviour
         private Item _itemID = Item.None;
         private int stack = 1;
         public string name = "NONE";
-        public int Durability, Number = 100;
+        public int Durability = 100;
+        public int durabilityLeft = 0;
+        public int Number = 1;
         private int breakPercent = 0;
         private bool timeBrakable = false;
         private float breakTimer = 0.0f;
@@ -55,6 +57,7 @@ public class Inventory : MonoBehaviour
             stack = _stack;
             Number = _Number;
             Durability = _Durability;
+            durabilityLeft = Durability;
             if (_timeBreakable)
             {
                 breakTime = _breakTime;
@@ -68,11 +71,11 @@ public class Inventory : MonoBehaviour
             bool used = false;
             if (Number >= 1)
             {
-                Durability -= percent;
-                if (Durability <= 0)
+                durabilityLeft -= percent;
+                if (durabilityLeft <= 0)
                 {
                     used = true;
-                    Durability = 100;
+                    durabilityLeft = Durability;
                     --Number;
                 }
             }
