@@ -9,7 +9,6 @@ TagManager:
   - BiteTrigger
   - BandageItem
   - Dagger
-  - ItemConsumer
   layers:
   - Default
   - TransparentFX
