@@ -432,7 +432,6 @@ GameObject:
   - component: {fileID: 271692918}
   - component: {fileID: 271692915}
   - component: {fileID: 271692916}
-  - component: {fileID: 271692917}
   - component: {fileID: 271692914}
   - component: {fileID: 271692913}
   - component: {fileID: 271692919}
@@ -625,34 +624,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _torchArea: {fileID: 478692871}
---- !u!114 &271692917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271692908}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71dc53307d45544448a05c766e1f1d17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ponchoNumber: 1
-  torchNumber: 1
-  bandageNumber: 1
-  AcidRain: 0
-  messageTime: 1
-  _playerController: {fileID: 0}
-  bandage_count_text_obj: {fileID: 0}
-  poncho_count_text_obj: {fileID: 0}
-  torch_count_text_obj: {fileID: 0}
-  bandage_img_obj: {fileID: 0}
-  poncho_img_obj: {fileID: 0}
-  torch_img_obj: {fileID: 0}
-  bandage_DurBar: {fileID: 0}
-  poncho_DurBar: {fileID: 0}
-  torch_DurBar: {fileID: 0}
-  _messege: {fileID: 0}
 --- !u!114 &271692918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3032,8 +3003,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
